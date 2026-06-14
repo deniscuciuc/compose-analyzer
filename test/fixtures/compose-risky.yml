@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    environment:
+      API_TOKEN: super-secret-token
+    depends_on:
+      - db
+    restart: "no"
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: plain-text-password
+    privileged: true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+  worker:
+    build:
+      context: ./worker
+    depends_on:
+      db:
+        condition: service_started
+    ports:
+      - "9000"
+networks:
+  backend: {}
+volumes:
+  data: {}
