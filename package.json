@@ -64,7 +64,7 @@
     "js-yaml": "^4.1.0"
   },
   "optionalDependencies": {
-    "dockerode": "^4.0.9"
+    "dockerode": "^5.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
