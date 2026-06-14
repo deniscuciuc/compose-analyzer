@@ -1,0 +1,42 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Europe/Chisinau"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      dev-tools:
+        patterns:
+          - "@biomejs/*"
+          - "@types/*"
+          - "ts-node"
+          - "typescript"
+        update-types:
+          - "minor"
+          - "patch"
+      runtime-minor-patch:
+        patterns:
+          - "@inquirer/*"
+          - "dockerode"
+          - "js-yaml"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Europe/Chisinau"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
