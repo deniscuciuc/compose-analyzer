@@ -67,7 +67,7 @@
     "dockerode": "^4.0.9"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.11",
+    "@biomejs/biome": "2.5.0",
     "@types/dockerode": "^3.3.38",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.15.0",
