@@ -86,6 +86,9 @@ export class ComposeCollector {
 		if (Array.isArray(service.environment)) {
 			for (const entry of service.environment) {
 				const [key, ...rest] = entry.split("=");
+				if (key === undefined) {
+					continue;
+				}
 				result[key] = rest.join("=");
 			}
 			return result;
@@ -120,13 +123,13 @@ export class ComposeCollector {
 	}
 
 	private static parsePortString(value: string): NormalizedPort {
-		const [body, protocol = "tcp"] = value.split("/");
+		const [body = "", protocol = "tcp"] = value.split("/");
 		const parts = body.split(":");
 
 		if (parts.length === 1) {
 			return {
 				raw: value,
-				target: parts[0],
+				target: parts[0] ?? "",
 				protocol,
 				exposesToAllInterfaces: true,
 				randomHostBinding: true,
@@ -136,8 +139,8 @@ export class ComposeCollector {
 		if (parts.length === 2) {
 			return {
 				raw: value,
-				published: parts[0],
-				target: parts[1],
+				published: parts[0] ?? "",
+				target: parts[1] ?? "",
 				protocol,
 				exposesToAllInterfaces: true,
 				randomHostBinding: false,

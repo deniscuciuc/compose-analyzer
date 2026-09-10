@@ -4,7 +4,7 @@ Contributions are welcome. Here is how to get started quickly.
 
 ## Prerequisites
 
-- Node.js >= 20
+- Node.js >= 22
 - pnpm >= 10
 - A Docker Compose file to analyze
 - Optional: Docker daemon access if you want to use `--with-docker`

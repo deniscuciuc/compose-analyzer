@@ -11,6 +11,7 @@ export interface ParsedOptions extends AnalyzerOptions {
 	outputDir?: string;
 	quiet: boolean;
 	version: boolean;
+	help: boolean;
 }
 
 export function parseOptions(argv = process.argv.slice(2)): ParsedOptions {
@@ -21,6 +22,7 @@ export function parseOptions(argv = process.argv.slice(2)): ParsedOptions {
 		json: false,
 		quiet: false,
 		version: false,
+		help: false,
 		withDocker: false,
 		html: false,
 	};
@@ -76,10 +78,10 @@ export function parseOptions(argv = process.argv.slice(2)): ParsedOptions {
 				break;
 			case "--help":
 				printHelp();
-				process.exit(0);
+				options.help = true;
 				return options;
 			default:
-				if (token.startsWith("-")) {
+				if (token?.startsWith("-")) {
 					throw new Error(`Unknown option: ${token}`);
 				}
 				throw new Error(`Unexpected argument: ${token}`);

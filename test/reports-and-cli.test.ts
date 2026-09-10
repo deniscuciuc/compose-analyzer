@@ -19,6 +19,7 @@ function createOptions(composeFile: string): ParsedOptions {
 		json: false,
 		quiet: true,
 		version: false,
+		help: false,
 		withDocker: false,
 		html: false,
 		outputDir,
@@ -52,9 +53,9 @@ test("CLI health command emits JSON", () => {
 	const stdout = execFileSync(
 		process.execPath,
 		[
-			"-r",
-			"ts-node/register",
-			"index.ts",
+			// The built CLI, not a ts-node loader: it is what actually ships, and ts-node
+			// does not support TypeScript 7.
+			"dist/src/cli/main.js",
 			"-j",
 			"-c",
 			"health",
