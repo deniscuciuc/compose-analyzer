@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nine tests covering the API, issue ordering, the missing-file path, and HTML escaping of
   hostile service names and issue titles.
 - `SECURITY.md`, `CODE_OF_CONDUCT.md` and `CODEOWNERS`.
+- A README banner.
 
 ### Changed
 
