@@ -12,6 +12,7 @@ function createOptions(composeFile: string): ParsedOptions {
 		json: false,
 		quiet: true,
 		version: false,
+		help: false,
 		withDocker: false,
 		html: false,
 		outputDir: "./reports",

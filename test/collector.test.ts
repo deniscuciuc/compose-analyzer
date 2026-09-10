@@ -32,6 +32,6 @@ test("ComposeCollector normalizes short and long port syntax", () => {
 	assert(worker);
 
 	const normalized = ComposeCollector.normalizePorts(worker.service);
-	assert.equal(normalized[0].randomHostBinding, true);
-	assert.equal(normalized[0].target, "9000");
+	assert.equal(normalized[0]!.randomHostBinding, true);
+	assert.equal(normalized[0]!.target, "9000");
 });

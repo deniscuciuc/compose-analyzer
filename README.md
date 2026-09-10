@@ -1,6 +1,6 @@
 # Docker Compose Analyzer
 
-[![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933?logo=node.js)](https://nodejs.org/)
+[![Node.js 22+](https://img.shields.io/badge/node-22%2B-339933?logo=node.js)](https://nodejs.org/)
 [![npm version](https://img.shields.io/npm/v/@deniscuciuc/compose-analyzer?logo=npm&color=cb3837)](https://www.npmjs.com/package/@deniscuciuc/compose-analyzer)
 [![npm downloads](https://img.shields.io/npm/dm/@deniscuciuc/compose-analyzer)](https://www.npmjs.com/package/@deniscuciuc/compose-analyzer)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -41,7 +41,7 @@ compose-analyzer -f docker-compose.yml -c security
 
 ## Requirements
 
-- Node.js >= 20
+- Node.js >= 22
 - pnpm >= 10
 - Any Docker Compose YAML file (`docker-compose.yml`, `compose.yml`, etc.)
 - Optional: Docker socket access for `--with-docker`
@@ -141,17 +141,72 @@ Interpretation:
 | `50–69` | Warning |
 | `0–49` | Critical |
 
+## Programmatic usage
+
+The package has two entry points. Importing it gives you the library and does nothing else;
+the CLI is reached through the `compose-analyzer` binary.
+
+```ts
+import { ComposeAnalyzer } from "@deniscuciuc/compose-analyzer";
+
+const analyzer = new ComposeAnalyzer({
+  composeFile: "docker-compose.prod.yml",
+  withDocker: true,   // also inspect the running containers
+  outputDir: "./reports",
+});
+
+const report = await analyzer.analyze();
+
+console.log(`Health: ${report.healthScore}/100`);
+for (const issue of report.allIssues) {
+  console.log(`[${issue.severity}] ${issue.service}: ${issue.title}`);
+}
+
+const path = await analyzer.generateReport("json", report);
+```
+
+### `ComposeAnalyzer`
+
+| Member | Description |
+|---|---|
+| `new ComposeAnalyzer(options?)` | Reads nothing until `analyze()` is called. |
+| `analyze()` | Parses and analyses the compose file, resolving to a `FullComposeReport`. |
+| `generateReport(format?, report?)` | Writes a report and resolves to the file path. Generates one first if not supplied. |
+
+| Option | Default | Description |
+|---|---|---|
+| `composeFile` | `docker-compose.yml` | Path to the compose file |
+| `withDocker` | `false` | Also inspect the Docker daemon and report each service's runtime state |
+| `outputDir` | `./reports` | Where `generateReport` writes |
+| `quiet` | `true` | Suppress progress output |
+
+The analyzers, collectors, reporters and every report type are exported too — see
+[`src/index.ts`](src/index.ts) for the full surface.
+
 ## Architecture
 
 ```text
-index.ts
-src/cli/{options,runner}.ts
-src/config/loader.ts
-src/collectors/{compose-collector,docker-collector}.ts
-src/analyzers/*.ts
-src/reporters/{report-generator,html-reporter,diff-reporter}.ts
-src/interactive/{index,menus,display}.ts
-src/utils/{format,print}.ts
+src/
+├── cli/main.ts              # CLI entry point (the `compose-analyzer` binary)
+├── index.ts                 # Library entry point, no side effects
+├── api.ts                   # ComposeAnalyzer, the programmatic API
+├── cli/{options,runner}.ts  # Argument parsing and command execution
+├── config/loader.ts         # Config loading
+├── constants.ts
+├── types.ts                 # Shared types
+├── health-score.ts          # Scoring from weighted issue severity
+├── analyzers/
+│   ├── image-analyzer.ts        # tags, pinning, build context
+│   ├── security-analyzer.ts     # privileged mode, secrets in env
+│   ├── reliability-analyzer.ts  # healthchecks, restart policies
+│   ├── resource-analyzer.ts     # cpu and memory limits
+│   └── network-analyzer.ts      # named networks, port bindings
+├── collectors/
+│   ├── compose-collector.ts     # parses and normalizes the compose file
+│   └── docker-collector.ts      # optional live daemon state, via dockerode
+├── interactive/{index,display,menus}.ts
+└── reporters/{report-generator,html-reporter,diff-reporter}.ts
+test/                        # Automated tests
 ```
 
 ## Development
