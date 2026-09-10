@@ -1,3 +1,5 @@
+![compose-analyzer](https://raw.githubusercontent.com/deniscuciuc/compose-analyzer/main/assets/banner.png)
+
 # Docker Compose Analyzer
 
 [![Node.js 22+](https://img.shields.io/badge/node-22%2B-339933?logo=node.js)](https://nodejs.org/)
